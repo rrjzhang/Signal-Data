@@ -39,8 +39,8 @@ fold_n = function(n, features, targets){
   train_pca = vector(mode="list",n)
   test_pca = vector(mode="list",n)
   for (i in 1:n){
-    train_target[[i]]  = target[fold_ind != i]
-    test_target[[i]]  = target[fold_ind == i]
+    train_target[[i]]  = targets[fold_ind != i]
+    test_target[[i]]  = targets[fold_ind == i]
     train_pca[[i]]  = data.frame(pca$x[fold_ind != i,])
     test_pca[[i]] = data.frame(pca$x[fold_ind == i,])
   }
@@ -53,30 +53,113 @@ fold_n = function(n, features, targets){
 }
 
 
-# differences_Ex = vector(mode="list", 10)
-# differences_Ne = vector(mode="list", 10)
-# 
-# 
-# # Using "p" from before, as PCA to be run on the whole thing
-# get_pca_rmse = function(pca_n) {
-#   for (i in 1:N_fold){
-#     print(paste("fold number", i))
-#     fit_df = as.data.frame(cbind(train_Neuroticism[[i]], train_Extraversion[[i]], train_pca[[i]][,1:pca_n]))
-#     
-#     colnames(fit_df)[1:2] = c("Neuroticism", "Extraversion")
-#     
-#     fit1 = lm(Neuroticism ~ . -Extraversion, fit_df)
-#     fit2 = lm(Extraversion ~ . -Neuroticism, fit_df)
-#     
-#     test_df = as.data.frame(cbind(test_Neuroticism[[i]], test_Extraversion[[i]], test_pca[[i]][,1:pca_n]))
-#     names(test_df)[1:2] = c("Neuroticism", "Extraversion")
-#     predicted1 = predict(fit1, test_df)
-#     predicted2 = predict(fit2, test_df)
-#     differences_Ex[[i]]= predicted1 - test_df$Extraversion      ## later add another dimension
-#     differences_Ne[[i]]= predicted1 - test_df$Neuroticism
-#   }
-#   return(c(
-#     error_Ex = sqrt(mean((unlist(differences_Ex))^2)),
-#     error_Ne = sqrt(mean((unlist(differences_Ne))^2))
-#   ))
-# }
+## 
+differences_gender = vector(mode="list", 10)
+differences_career = vector(mode="list", 10)
+differences_race = vector(mode="list", 10)
+
+get_pca_rmse = function(features, target, n_fold, pca_n){
+  folded = fold_n(n_fold,features,target)
+  train_target = folded[[1]]
+  test_target = folded[[2]]
+  train_pca = folded[[3]]
+  test_pca = folded[[4]]
+  fit_objects = vector(mode="list", pca_n)
+  coefficient_pvals = vector(mode="list", pca_n)
+  for (n in 1:pca_n){
+    fit_objects[[n]] = vector(mode="numeric", n_fold)
+    for (i in 1:n_fold){
+      fit_df = as.data.frame(cbind(train_target[[i]],train_pca[[i]][,1:n]))
+      colnames(fit_df)[1]=c("target")
+      fit = glm(target~., fit_df, family=binomial)
+      
+      test_df = as.data.frame(cbind(test_target[[i]],test_pca[[i]][,1:n]))
+      colnames(test_df)[1]=c("target")
+      # alternative 
+      predictions = predict(fit, test_df)
+      
+      fit_objects[[n]][i] = auc(roc(test_target[[i]], predictions))
+    }
+    
+    pca = prcomp(features, scale=TRUE)
+    fit_df = as.data.frame(cbind(target, pca$x[,1:n]))
+    colnames(fit_df)[1] = "target"
+    fit = glm(target ~ ., fit_df, family=binomial)
+    coefficient_pvals[[n]] = summary(fit)$coefficients[,1]
+  }
+  return(list(auc = fit_objects,
+              coefficient_pvals = coefficient_pvals))
+}
+
+
+# this is for gender
+
+silenced = get_pca_rmse(features, targets$gender, 10, 17)
+auc_df = as.data.frame(silenced$auc)
+colnames(auc_df) = as.character(1:17)
+means = colMeans(auc_df)
+sds = sapply(auc_df, sd)
+
+ggplot(data.frame(), aes(1:17, means)) + geom_point() + geom_errorbar(aes(ymin= means - sds, ymax = means + sds))
+
+
+gender_coefficients = as.data.frame(sapply(silenced$coefficient_pvals, function(itemvector) {
+                                                            val = rep(0, 18)
+                                                            val[1:length(itemvector)] = itemvector
+                                                            return(val)
+                                                          }))
+
+corrplot(as.matrix(gender_coefficients), is.corr=FALSE)
+
+
+# gender_df = rbind(cbind(gender_coefficients$V1, type="V1"),
+#                   
+#                   
+#                   )
+
+
+## this is for race
+race_df = filter(spd_df, race==2 | race==4)
+features_race = select(race_df, sports:yoga)
+target_race = race_df$race
+target_race = as.numeric(target_race==4)
+
+race_analysis = get_pca_rmse(features_race, target_race, 10, 17)
+race_auc_df = as.data.frame(race_analysis$auc)
+colnames(race_auc_df) = as.character(1:17)
+means_race = colMeans(race_auc_df)
+race_sds = sapply(race_auc_df, sd)
+
+ggplot(data.frame(), aes(1:17, means_race)) + geom_point() + geom_errorbar(aes(ymin= means_race - race_sds, ymax = means_race + race_sds))
+
+race_coefficients = as.data.frame(sapply(race_analysis$coefficient_pvals, function(itemvector) {
+  val = rep(0, 18)
+  val[1:length(itemvector)] = itemvector
+  return(val)
+}))
+
+corrplot(as.matrix(race_coefficients), is.corr=FALSE)
+
+
+## this is for career
+career_df = filter(spd_df, career_c==2 | career_c==4)
+features_career = select(career_df, sports:yoga)
+target_career = career_df$career_c
+target_career = as.numeric(target_career==4)
+
+career_analysis = get_pca_rmse(features_career, target_career, 10, 17)
+career_auc_df = as.data.frame(career_analysis$auc)
+colnames(career_auc_df) = as.character(1:17)
+means_career = colMeans(career_auc_df)
+career_sds = sapply(career_auc_df, sd)
+
+ggplot(data.frame(), aes(1:17, means_career)) + geom_point() + geom_errorbar(aes(ymin= means_career - career_sds, ymax = means_career + career_sds))
+
+
+career_coefficients = as.data.frame(sapply(career_analysis$coefficient_pvals, function(itemvector) {
+  val = rep(0, 18)
+  val[1:length(itemvector)] = itemvector
+  return(val)
+}))
+
+corrplot(as.matrix(career_coefficients), is.corr=FALSE)
