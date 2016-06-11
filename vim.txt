@@ -1,0 +1,71 @@
+patch 7.4.1916
+Problem:    No proper test for what 7.4.1906 fixes.
+Solution:   Add a test for reading many lines.patch 7.4.1915
+Problem:    The effect of the PopupMenu autocommand isn't directly visible.
+Solution:   Call gui_update_menus() before displaying the popup menu. (Shane
+            Harper, closs #855)patch 7.4.1914
+Problem:    Executing autocommands while using the signal stack has a high
+            chance of crashing Vim.
+Solution:   Don't invoke autocommands when on the signal stack.patch 7.4.1913
+Problem:    When ":doautocmd" is used modelines are used even when no
+            autocommands were executed. (Daniel Hahler)
+Solution:   Skip processing modelines. (closes #854)patch 7.4.1912
+Problem:    No test for using setqflist() on an older quickfix list.
+Solution:   Add a couple of tests.patch 7.4.1911
+Problem:    Recent history lines may be lost when exiting Vim.
+Solution:   Merge history using the timestamp.patch 7.4.1910
+Problem:    Tests using external command to delete directory.
+Solution:   Use delete().patch 7.4.1909
+Problem:    Doubled semicolons.
+Solution:   Reduce to one. (Dominique Pelle)patch 7.4.1908
+Problem:    Netbeans uses uninitialzed pointer and freed memory.
+Solution:   Set "buffer" at the right place (hint by Ken Takata)patch 7.4.1907
+Problem:    Warnings from 64 bit compiler.
+Solution:   Change type to size_t. (Mike Williams)patch 7.4.1906
+Problem:    Collapsing channel buffers and searching for NL does not work
+            properly. (Xavier de Gary, Ramel Eshed)
+Solution:   Do not assume the buffer contains a NUL or not.  Change NUL bytes
+            to NL to avoid the string is truncated.patch 7.4.1905
+Problem:    Some compilers can't handle a double semicolon.
+Solution:   Remove one semicolon.patch 7.4.1904
+Problem:    Build fails.
+Solution:   Add missing changes.patch 7.4.1903
+Problem:    When writing viminfo merging current history with history in
+            viminfo may drop recent history entries.
+Solution:   Add new format for viminfo lines, use it for history entries.  Use
+            a timestamp for ordering the entries. Add test_settime().
+            Add the viminfo version.  Does not do merging on timestamp yet.patch 7.4.1902
+Problem:    No test for collapsing buffers for a channel.  Some text is lost.
+Solution:   Add a simple test.  Set rq_buflen correctly.patch 7.4.1901
+Problem:    Win32: the "Disabled" menu items would appear enabled.
+Solution:   Use submenu_id if there is a parent. (Shane Harper, closes #834)patch 7.4.1900
+Problem:    Using CTRL-] in the help on "{address}." doesn't work.
+Solution:   Recognize an item in {}. (Hirohito Higashi, closes #814)patch 7.4.1899
+Problem:    GTK 3: cursor blinking doesn't work well.
+Solution:   Instead of gui_gtk_window_clear() use gui_mch_clear_block().
+            (Kazunobu Kuriyama)patch 7.4.1898
+Problem:    User commands don't support modifiers.
+Solution:   Add the <mods> item. (Yegappan Lakshmanan, closes #829)patch 7.4.1897
+Problem:    Various typos, long lines and style mistakes.
+Solution:   Fix the typos, wrap lines, improve style.Updated runtime files.patch 7.4.1896
+Problem:    Invoking mark_adjust() when adding a new line below the last line
+            is pointless.
+Solution:   Skip calling mark_adjust() when appending below the last line.patch 7.4.1895
+Problem:    Cannot use a window ID where a window number is expected.
+Solution:   Add LOWEST_WIN_ID, so that the window ID can be used where a
+            number is expected.patch 7.4.1894
+Problem:    Cannot get the window ID for a mouse click.
+Solution:   Add v:mouse_winid.patch 7.4.1893
+Problem:    Cannot easily get the window ID for a buffer.
+Solution:   Add bufwinid().patch 7.4.1892
+Problem:    balloon eval only gets the window number, not the ID.
+Solution:   Add v:beval_winid.patch 7.4.1891
+Problem:    Channel reading very long lines is slow.
+Solution:   Collapse multiple buffers until a NL is found.patch 7.4.1890
+Problem:    GUI: When channel data is received the cursor blinking is
+            interrupted.  (Ramel Eshed)
+Solution:   Don't update the cursor when it is blinking.patch 7.4.1889
+Problem:    When umask is set to 0177 Vim can't create temp files. (Lcd)
+Solution:   Also correct umask when using mkdtemp().patch 7.4.1888
+Problem:    Wrong computation of remaining wait time in RealWaitForChar()
+Solution:   Remember the original waiting time.

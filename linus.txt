@@ -1,0 +1,505 @@
+Merge branch 'for-linus-4.7' of git://git.kernel.org/pub/scm/linux/kernel/git/mason/linux-btrfs
+
+Pull btrfs fixes from Chris Mason:
+ "Has some fixes and some new self tests for btrfs.  The self tests are
+  usually disabled in the .config file (unless you're doing btrfs dev
+  work), and this bunch is meant to find problems with the 64K page size
+  patches.
+
+  Jeff has a patch to help people see if they are using the hardware
+  assist crc32c module, which really helps us nail down problems when
+  people ask why crcs are using so much CPU.
+
+  Otherwise, it's small fixes"
+
+* 'for-linus-4.7' of git://git.kernel.org/pub/scm/linux/kernel/git/mason/linux-btrfs:
+  Btrfs: self-tests: Fix extent buffer bitmap test fail on BE system
+  Btrfs: self-tests: Fix test_bitmaps fail on 64k sectorsize
+  Btrfs: self-tests: Use macros instead of constants and add missing newline
+  Btrfs: self-tests: Support testing all possible sectorsizes and nodesizes
+  Btrfs: self-tests: Execute page straddling test only when nodesize < PAGE_SIZE
+  btrfs: advertise which crc32c implementation is being used at module load
+  Btrfs: add validadtion checks for chunk loading
+  Btrfs: add more validation checks for superblock
+  Btrfs: clear uptodate flags of pages in sys_array eb
+  Btrfs: self-tests: Support non-4k page size
+  Btrfs: Fix integer overflow when calculating bytes_per_bitmap
+  Btrfs: test_check_exists: Fix infinite loop when searching for free space entries
+  Btrfs: end transaction if we abort when creating uuid root
+  btrfs: Use __u64 in exported linux/btrfs.h.Merge tag 'powerpc-4.7-3Michael Ellerman:' of git://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux
+
+Pull powerpc fixes from
+ - ptrace: Fix out of bounds array access warning from Khem Raj
+ - pseries: Fix PCI config address for DDW from Gavin Shan
+ - pseries: Fix IBM_ARCH_VEC_NRCORES_OFFSET since POWER8NVL was added
+   from Michael Ellerman
+ - of: fix autoloading due to broken modalias with no 'compatible' from
+   Wolfram Sang
+ - radix: Fix always false comparison against MMU_NO_CONTEXT from Aneesh
+   Kumar K.V
+ - hash: Compute the segment size correctly for ISA 3.0 from Aneesh
+   Kumar K.V
+ - nohash: Fix build break with 64K pages from Michael Ellerman
+
+* tag 'powerpc-4.7-3' of git://git.kernel.org/pub/scm/linux/kernel/git/powerpc/linux:
+  powerpc/nohash: Fix build break with 64K pages
+  powerpc/mm/hash: Compute the segment size correctly for ISA 3.0
+  powerpc/mm/radix: Fix always false comparison against MMU_NO_CONTEXT
+  of: fix autoloading due to broken modalias with no 'compatible'
+  powerpc/pseries: Fix IBM_ARCH_VEC_NRCORES_OFFSET since POWER8NVL was added
+  powerpc/pseries: Fix PCI config address for DDW
+  powerpc/ptrace: Fix out of bounds array access warningMerge tag 'hwmon-for-linus-v4.7-rc3' of git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging
+
+Pull hwmon fixes from Guenter Roeck:
+
+ - fix regression in fam15h_power driver
+
+ - minor variable type fix in lm90 driver
+
+ - document compatible statement for ina2xx driver
+
+* tag 'hwmon-for-linus-v4.7-rc3' of git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-staging:
+  hwmon: (lm90) use proper type for update_interval
+  hwmon: (ina2xx) Document compatible for INA231
+  hwmon: (fam15h_power) Disable preemption when reading registersMerge branch 'stacking-fixes' (vfs stacking fixes from Jann)
+
+Merge filesystem stacking fixes from Jann Horn.
+
+* emailed patches from Jann Horn <jannh@google.com>:
+  sched: panic on corrupted stack end
+  ecryptfs: forbid opening files without mmap handler
+  proc: prevent stacking filesystems on topMerge tag 'arm64-fixes' of git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux
+
+Pull arm64 fix from Will Deacon:
+ "A fix for an issue that Alex saw whilst swapping with hardware
+  access/dirty bit support enabled in the kernel: Fix a failure to fault
+  in old pages on a write when CONFIG_ARM64_HW_AFDBM is enabled"
+
+* tag 'arm64-fixes' of git://git.kernel.org/pub/scm/linux/kernel/git/arm64/linux:
+  arm64: mm: always take dirty state from new pte in ptep_set_access_flagsMerge branch 'x86-urgent-for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+
+Pull x86 fixes from Ingo Molnar:
+ "Misc fixes from all around the map, plus a commit that introduces a
+  new header of Intel model name symbols (unused) that will make the
+  next merge window easier"
+
+* 'x86-urgent-for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip:
+  x86/ioapic: Fix incorrect pointers in ioapic_setup_resources()
+  x86/entry/traps: Don't force in_interrupt() to return true in IST handlers
+  x86/cpu/AMD: Extend X86_FEATURE_TOPOEXT workaround to newer models
+  x86/cpu/intel: Introduce macros for Intel family numbers
+  x86, build: copy ldlinux.c32 to image.iso
+  x86/msr: Use the proper trace point conditional for writesMerge branch 'sched-urgent-for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+
+Pull scheduler fixes from Ingo Molnar:
+ "Two scheduler debugging fixes"
+
+* 'sched-urgent-for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip:
+  sched/debug: Fix 'schedstats=enable' cmdline option
+  sched/debug: Fix /proc/sched_debug regressionMerge branch 'perf-urgent-for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+
+Pull perf fixes from Ingo Molnar:
+ "A handful of tooling fixes, two PMU driver fixes and a cleanup of
+  redundant code that addresses a security analyzer false positive"
+
+* 'perf-urgent-for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip:
+  perf/core: Remove a redundant check
+  perf/x86/intel/uncore: Remove SBOX support for Broadwell server
+  perf ctf: Convert invalid chars in a string before set value
+  perf record: Fix crash when kptr is restricted
+  perf symbols: Check kptr_restrict for root
+  perf/x86/intel/rapl: Fix pmus free during cleanupMerge branch 'locking-urgent-for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+
+Pull locking fixes from Ingo Molnar:
+ "Misc fixes:
+
+   - a file-based futex fix
+   - one more spin_unlock_wait() fix
+   - a ww-mutex deadlock detection improvement/fix
+   - and a raw_read_seqcount_latch() barrier fix"
+
+* 'locking-urgent-for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip:
+  futex: Calculate the futex key based on a tail page for file-based futexes
+  locking/qspinlock: Fix spin_unlock_wait() some more
+  locking/ww_mutex: Report recursive ww_mutex locking early
+  locking/seqcount: Re-fix raw_read_seqcount_latch()Merge branch 'efi-urgent-for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+
+Pull EFI fixes from Ingo Molnar:
+ "Two fixes: a regression/crash fix, and a message output fix"
+
+* 'efi-urgent-for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip:
+  efi/arm: Fix the format of EFI debug messages
+  efi: Fix for_each_efi_memory_desc_in_map() for empty memmapsMerge branch 'core-urgent-for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip
+
+Pull objtool fix from Ingo Molnar:
+ "Addresses a false positive warning in the GPU/DRM code"
+
+[ Technically it's not a "false positive", but it's the virtual GPU
+  interface that needs the frame pointer for its own internal purposes ]
+
+* 'core-urgent-for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/tip/tip:
+  objtool, drm/vmwgfx: Fix "duplicate frame pointer save" warningMerge git://git.kernel.org/pub/scm/linux/kernel/git/davem/net
+
+Pull networking fixes from David Miller:
+
+ 1) nfnetlink timestamp taken from wrong skb, fix from Florian Westphal.
+
+ 2) Revert some msleep conversions in rtlwifi as these spots are in
+    atomic context, from Larry Finger.
+
+ 3) Validate that NFTA_SET_TABLE attribute is actually specified when we
+    call nf_tables_getset().  From Phil Turnbull.
+
+ 4) Don't do mdio_reset in stmmac driver with spinlock held as that can
+    sleep, from Vincent Palatin.
+
+ 5) sk_filter() does things other than run a BPF filter, so we should
+    not elide it's call just because sk->sk_filter is NULL.  Fix from
+    Eric Dumazet.
+
+ 6) Fix missing backlog updates in several packet schedulers, from Cong
+    Wang.
+
+ 7) bnx2x driver should allow VLAN add/remove while the interface is
+    down, from Michal Schmidt.
+
+ 8) Several RDS/TCP race fixes from Sowmini Varadhan.
+
+ 9) fq_codel scheduler doesn't return correct queue length in dumps,
+    from Eric Dumazet.
+
+10) Fix TCP stats for tail loss probe and early retransmit in ipv6, from
+    Yuchung Cheng.
+
+11) Properly initialize udp_tunnel_socket_cfg in l2tp_tunnel_create(),
+    from Guillaume Nault.
+
+12) qfq scheduler leaks SKBs if a kzalloc fails, fix from Florian
+    Westphal.
+
+13) sock_fprog passed into PACKET_FANOUT_DATA needs compat handling,
+    from Willem de Bruijn.
+
+* git://git.kernel.org/pub/scm/linux/kernel/git/davem/net: (85 commits)
+  vmxnet3: segCnt can be 1 for LRO packets
+  packet: compat support for sock_fprog
+  stmmac: fix parameter to dwmac4_set_umac_addr()
+  net/mlx5e: Fix blue flame quota logic
+  net/mlx5e: Use ndo_stop explicitly at shutdown flow
+  net/mlx5: E-Switch, always set mc_promisc for allmulti vports
+  net/mlx5: E-Switch, Modify node guid on vf set MAC
+  net/mlx5: E-Switch, Fix vport enable flow
+  net/mlx5: E-Switch, Use the correct error check on returned pointers
+  net/mlx5: E-Switch, Use the correct free() function
+  net/mlx5: Fix E-Switch flow steering capabilities check
+  net/mlx5: Fix flow steering NIC capabilities check
+  net/mlx5: Fix root flow table update
+  net/mlx5: Fix MLX5_CMD_OP_MAX to be defined correctly
+  net/mlx5: Fix masking of reserved bits in XRCD number
+  net/mlx5: Fix the size of modify QP mailbox
+  mlxsw: spectrum: Don't sleep during ndo_get_phys_port_name()
+  mlxsw: spectrum: Make split flow match firmware requirements
+  wext: Fix 32 bit iwpriv compatibility issue with 64 bit Kernel
+  cfg80211: remove get/set antenna and tx power warnings
+  ...Merge tag 'sound-4.7-rc3' of git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound
+
+Pull sound fixes from Takashi Iwai:
+ "We have only few, mainly HD-audio device-specific fixes.  Realtek
+  codec driver got a slightly more LOC, but they are all for the new
+  codec chip, and won't affect others at all"
+
+* tag 'sound-4.7-rc3' of git://git.kernel.org/pub/scm/linux/kernel/git/tiwai/sound:
+  ALSA: hda - Add PCI ID for Kabylake
+  ALSA: hda/realtek: Add T560 docking unit fixup
+  ALSA: hda - Fix headset mic detection problem for Dell machine
+  ALSA: uapi: Add three missing header files to Kbuild file
+  ALSA: hda/realtek - Add support for new codecs ALC700/ALC701/ALC703
+  ALSA: hda/realtek - ALC256 speaker noise issueMerge tag 'drm-fixes-for-v4.7-rc3' of git://people.freedesktop.org/~airlied/linux
+
+Pull drm fixes from Dave Airlie:
+ "This weeks instalment of fixes:
+
+  amdgpu:
+     Lots of memory leak and firmware leak fixes
+
+  nouveau:
+     Collection of display fixes, KASAN fixes
+
+  vc4:
+     vblank/pageflipping fixes
+
+  fsl-dcu:
+     Regmap cache fix
+
+  omap:
+     Unused variable warning fix.
+
+  Nothing too surprising so far"
+
+* tag 'drm-fixes-for-v4.7-rc3' of git://people.freedesktop.org/~airlied/linux: (46 commits)
+  drm/amdgpu: fix warning with powerplay disabled.
+  drm/amd/powerplay: delete useless code as pptable changed in vbios.
+  drm/amd/powerplay: fix bug visit array out of bounds
+  drm/amdgpu: fix smu ucode memleak (v2)
+  drm/amdgpu: add release firmware for cgs
+  drm/amdgpu: fix tonga smu_fini mem leak
+  drm/amdgpu: fix fiji smu fini mem leak
+  drm/amdgpu: fix cik sdma ucode memleak
+  drm/amdgpu: fix sdma24 ucode mem leak
+  drm/amdgpu: fix sdma3 ucode mem leak
+  drm/amdgpu: fix uvd fini mem leak
+  drm/amdgpu: fix gfx 7 ucode mem leak
+  drm/amdgpu: fix gfx8 ucode mem leak
+  drm/amdgpu: fix missing free wb for cond_exec
+  drm/amdgpu: fix memleak in pptable_init
+  drm/amdgpu: fix mem leak in atombios
+  drm/amdgpu: fix mem leak in pplib/hwmgr
+  drm/amdgpu: fix mem leak in smumgr
+  drm/amdgpu: add pipeline sync while vmid switch in same ctx
+  drm/amdgpu: vBIOS post only call when mem_size zero
+  ...Merge tag 'acpi-4.7-rc3' of git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm
+
+Pull ACPI fix from Rafael Wysocki:
+ "A recently introduced boot regression related to the ACPI EC
+  initialization is addressed by restoring the previous behavior (Lv
+  Zheng)"
+
+* tag 'acpi-4.7-rc3' of git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm:
+  ACPI / EC: Fix a boot EC regresion by restoring boot EC support for the DSDT ECMerge tag 'pm-4.7-rc3' of git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm
+
+Pull power management fixes from Rafael Wysocki:
+ "Stable-candidate fixes for the intel_pstate driver and the cpuidle
+  core.
+
+  Specifics:
+
+   - Fix two intel_pstate initialization issues, one of which was
+     introduced during the 4.4 cycle (Srinivas Pandruvada)
+
+   - Fix kernel build with CONFIG_UBSAN set and CONFIG_CPU_IDLE unset
+     (Catalin Marinas)"
+
+* tag 'pm-4.7-rc3' of git://git.kernel.org/pub/scm/linux/kernel/git/rafael/linux-pm:
+  cpufreq: intel_pstate: Fix ->set_policy() interface for no_turbo
+  cpufreq: intel_pstate: Fix code ordering in intel_pstate_set_policy()
+  cpuidle: Do not access cpuidle_devices when !CONFIG_CPU_IDLEMerge branch 'akpm' (patches from Andrew)
+
+Merge misc fixes from Andrew Morton:
+ "7 fixes"
+
+* emailed patches from Andrew Morton <akpm@linux-foundation.org>:
+  mm/fadvise.c: do not discard partial pages with POSIX_FADV_DONTNEED
+  mm: introduce dedicated WQ_MEM_RECLAIM workqueue to do lru_add_drain_all
+  kernel/relay.c: fix potential memory leak
+  mm: thp: broken page count after commit aa88b68c3b1d
+  revert "mm: memcontrol: fix possible css ref leak on oom"
+  kasan: change memory hot-add error messages to info messages
+  mm/hugetlb: fix huge page reserve accounting for private mappingsMerge tag 'for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/dledford/rdma
+
+Pull rdma fixes from Doug Ledford:
+ "This is the first -rc pull for the RDMA subsystem.  The patch count is
+  high, but they are all smallish patches fixing simple things for the
+  most part, and the overall line count of changes here is smaller than
+  the patch count would lead a person to believe.
+
+  Code is up and running in my labs, including direct testing of cxgb4,
+  mlx4, mlx5, ocrdma, and qib.
+
+  Summary:
+
+   - Multiple minor fixes to the rdma core
+   - Multiple minor fixes to hfi1
+   - Multiple minor fixes to mlx5
+   - A very few other minor fixes (SRP, IPoIB, usNIC, mlx4)"
+
+* tag 'for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/dledford/rdma: (35 commits)
+  IB/IPoIB: Don't update neigh validity for unresolved entries
+  IB/mlx5: Fix alternate path code
+  IB/mlx5: Fix pkey_index length in the QP path record
+  IB/mlx5: Fix entries check in mlx5_ib_resize_cq
+  IB/mlx5: Fix entries checks in mlx5_ib_create_cq
+  IB/mlx5: Check BlueFlame HCA support
+  IB/mlx5: Fix returned values of query QP
+  IB/mlx5: Limit query HCA clock
+  IB/mlx5: Fix FW version diaplay in sysfs
+  IB/mlx5: Return PORT_ERR in Active to Initializing tranisition
+  IB/mlx5: Set flow steering capability bit
+  IB/core: Make all casts in ib_device_cap_flags enum consistent
+  IB/core: Fix bit curruption in ib_device_cap_flags structure
+  IB/core: Initialize sysfs attributes before sysfs create group
+  IB/IPoIB: Disable bottom half when dealing with device address
+  IB/core: Fix removal of default GID cache entry
+  IB/IPoIB: Fix race between ipoib_remove_one to sysfs functions
+  IB/core: Fix query port failure in RoCE
+  IB/core: fix error unwind in sysfs hw counters code
+  IB/core: Fix array length allocation
+  ...Merge tag 'arc-4.7-rc3' of git://git.kernel.org/pub/scm/linux/kernel/git/vgupta/arc
+
+Pull ARC fixes from Vineet Gupta:
+
+ - Revert of ll-sc backoff retry workaround in atomics/spinlocks as
+   hardware is now proven to work just fine
+
+ - Typo fixes (Thanks Andrea Gelmini)
+
+ - Removal of obsolete DT property (Alexey)
+
+ - Other minor fixes
+
+* tag 'arc-4.7-rc3' of git://git.kernel.org/pub/scm/linux/kernel/git/vgupta/arc:
+  Revert "ARCv2: spinlock/rwlock/atomics: Delayed retry of failed SCOND with exponential backoff"
+  Revert "ARCv2: spinlock/rwlock: Reset retry delay when starting a new spin-wait cycle"
+  Revert "ARCv2: spinlock/rwlock/atomics: reduce 1 instruction in exponential backoff"
+  ARC: don't enable DISCONTIGMEM unconditionally
+  ARC: [intc-compact] simplify code for 2 priority levels
+  arc: Get rid of root core-frequency property
+  Fix typosMerge branch 'for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs
+
+Pull vfs fixes from Al Viro:
+ "Fixes for crap of assorted ages: EOPENSTALE one is 4.2+, autofs one is
+  4.6, d_walk - 3.2+.
+
+  The atomic_open() and coredump ones are regressions from this window"
+
+* 'for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/viro/vfs:
+  coredump: fix dumping through pipes
+  fix a regression in atomic_open()
+  fix d_walk()/non-delayed __d_free() race
+  autofs braino fix for do_last()
+  fix EOPENSTALE bug in do_last()Merge tag 'clk-fixes-for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/clk/linux
+
+Pull clk fixes from Stephen Boyd:
+ "This finally removes the CLK_IS_ROOT flag by picking up the last few
+  stragglers that didn't get merged by anyone this time around.
+
+  Better to do it now than wait for another one to pop up.  There's also
+  a minor maintainers update and a Kconfig fix"
+
+* tag 'clk-fixes-for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/clk/linux:
+  clk: nxp: Select MFD_SYSCON for creg driver
+  MAINTAINERS: Add file patterns for clock device tree bindings
+  clk: Remove CLK_IS_ROOT flag
+  clk: microchip: Remove CLK_IS_ROOT
+  powerpc/512x: clk: Remove CLK_IS_ROOT
+  vexpress/spc: Remove CLK_IS_ROOTMerge branch 'for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/ebiederm/user-namespace
+
+Pull userns fixes from Eric Biederman:
+ "This contains two small but significant fixes to fs/namespace.c.
+
+  The first adds a filesystem refcount drop on error.  The second
+  corrects a test in fs_fully_visible which could be abused to allow
+  mounting of proc or sysfs, when that should not be allowed.
+
+  To keep myself honest I have tested to ensure the incorrect test in
+  fs_fully_visible actually allows improper mounting of proc before the
+  fix and that when fixed the improper mounting is not allowed"
+
+* 'for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/ebiederm/user-namespace:
+  mnt: fs_fully_visible test the proper mount for MNT_LOCKED
+  mnt: If fs_fully_visible fails call put_filesystem.Merge tag 'edac_fixes_for_4.7' of git://git.kernel.org/pub/scm/linux/kernel/git/bp/bp
+
+Pull EDAC fixes from Borislav Petkov:
+ "EDAC fixes to recent fallout from workqueue cleanup and Broadwell
+  enablement:
+
+   - sb_edac fallout fixes from recent Broadwell enablement (Tony Luck)
+
+   - EDAC workqueue poll period resetting fix (Nicholas Krause)"
+
+* tag 'edac_fixes_for_4.7' of git://git.kernel.org/pub/scm/linux/kernel/git/bp/bp:
+  EDAC, sb_edac: Readd accidentally dropped Broadwell-D support
+  EDAC: Fix workqueues poll period resetting
+  EDAC, sb_edac: Fix rank lookup on BroadwellLinux 4.7-rc2Merge branch 'parisc-4.7-2' of git://git.kernel.org/pub/scm/linux/kernel/git/deller/parisc-linux
+
+Pull parisc fixes from Helge Deller:
+
+ - Fix printk time stamps on SMP systems which got wrong due to a patch
+   which was added during the merge window
+
+ - Fix two bugs in the stack backtrace code: Races in module unloading
+   and possible invalid accesses to memory due to wrong instruction
+   decoding (Mikulas Patocka)
+
+ - Fix userspace crash when syscalls access invalid unaligned userspace
+   addresses.  Those syscalls will now return EFAULT as expected.
+   (tagged for stable kernel series)
+
+* 'parisc-4.7-2' of git://git.kernel.org/pub/scm/linux/kernel/git/deller/parisc-linux:
+  parisc: Move die_if_kernel() prototype into traps.h header
+  parisc: Fix pagefault crash in unaligned __get_user() call
+  parisc: Fix printk time during boot
+  parisc: Fix backtrace on PA-RISCMerge branch 'for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/jmorris/linux-security
+
+Pull key handling update from James Morris:
+ "This alters a new keyctl function added in the current merge window to
+  allow for a future extension planned for the next merge window"
+
+* 'for-linus' of git://git.kernel.org/pub/scm/linux/kernel/git/jmorris/linux-security:
+  KEYS: Add placeholder for KDF usage with DHMerge tag 'drm-fixes-for-v4.7-rc2' of git://people.freedesktop.org/~airlied/linux
+
+Pull drm fixes from Dave Airlie:
+ "A bunch of ARM drivers got into the fixes vibe this time around, so
+  this contains a bunch of fixes for imx, atmel hlcdc, arm hdlcd (only
+  so many combos of hlcd), mediatek and omap drm.
+
+  Other than that there is one mgag200 fix and a few core drm regression
+  fixes"
+
+* tag 'drm-fixes-for-v4.7-rc2' of git://people.freedesktop.org/~airlied/linux: (34 commits)
+  drm/omap: fix unused variable warning.
+  drm: hdlcd: Add information about the underlying framebuffers in debugfs
+  drm: hdlcd: Cleanup the atomic plane operations
+  drm/hdlcd: Fix up crtc_state->event handling
+  drm: hdlcd: Revamp runtime power management
+  drm/mediatek: mtk_dsi: Remove spurious drm_connector_unregister
+  drm/mediatek: mtk_dpi: remove invalid error message
+  drm: atmel-hlcdc: fix a NULL check
+  drm: atmel-hlcdc: fix atmel_hlcdc_crtc_reset() implementation
+  drm/mgag200: Black screen fix for G200e rev 4
+  drm: Wrap direct calls to driver->gem_free_object from CMA
+  drm: fix fb refcount issue with atomic modesetting
+  drm: make drm_atomic_set_mode_prop_for_crtc() more reliable
+  drm/sti: remove extra mode fixup
+  drm: add missing drm_mode_set_crtcinfo call
+  drm/omap: include gpio/consumer.h where needed
+  drm/omap: include linux/seq_file.h where needed
+  Revert "drm/omap: no need to select OMAP2_DSS"
+  drm/omap: Remove regulator API abuse
+  OMAPDSS: HDMI5: Change DDC timings
+  ...Merge tag 'vfio-v4.7-rc2' of git://github.com/awilliam/linux-vfio
+
+Pull VFIO fixes from Alex Williamson:
+ "Fix irqfd shutdown ordering, build warning, and VPD short read"
+
+* tag 'vfio-v4.7-rc2' of git://github.com/awilliam/linux-vfio:
+  vfio/pci: Allow VPD short read
+  vfio/type1: Fix build warning
+  vfio/pci: Fix ordering of eventfd vs virqfd shutdownMerge tag 'mmc-v4.7-rc1-2' of git://git.linaro.org/people/ulf.hansson/mmc
+
+Pull MMC fixes from Ulf Hansson:
+ "MMC core:
+   - Fix/restore behaviour when selecting bus width for (e)MMC
+
+  MMC host:
+   - sunxi: Fix eMMC HS-DDR modes on Allwinner A80"
+
+* tag 'mmc-v4.7-rc1-2' of git://git.linaro.org/people/ulf.hansson/mmc:
+  mmc: sunxi: Re-enable eMMC HS-DDR modes on Allwinner A80
+  mmc: sunxi: Fix DDR MMC timings for A80
+  mmc: fix mmc mode selection for HS-DDR and higherMerge branch 'for-linus-4.7' of git://git.kernel.org/pub/scm/linux/kernel/git/mason/linux-btrfs
+
+Pull btrfs fixes from Chris Mason:
+ "The important part of this pull is Filipe's set of fixes for btrfs
+  device replacement.  Filipe fixed a few issues seen on the list and a
+  number he found on his own"
+
+* 'for-linus-4.7' of git://git.kernel.org/pub/scm/linux/kernel/git/mason/linux-btrfs:
+  Btrfs: deal with duplciates during extent_map insertion in btrfs_get_extent
+  Btrfs: fix race between device replace and read repair
+  Btrfs: fix race between device replace and discard
+  Btrfs: fix race between device replace and chunk allocation
+  Btrfs: fix race setting block group back to RW mode during device replace
+  Btrfs: fix unprotected assignment of the left cursor for device replace
+  Btrfs: fix race setting block group readonly during device replace
+  Btrfs: fix race between device replace and block group removal
+  Btrfs: fix race between readahead and device replace/removal
